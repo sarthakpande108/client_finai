@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
-const GeneratePrompt = () => {
+const Result = () => {
   const [profile, setProfile] = useState({});
   const [assets, setAssets] = useState({});
   const [financialGoal, setFinancialGoal] = useState({});
@@ -94,10 +94,9 @@ const GeneratePrompt = () => {
   return (
     <div>
       <h2>Generated Prompt</h2>
-      <p className='bg-black'>{prompt}</p> 
-      {console.log(prompt)}{/* Display the generated prompt */}
+      {<h1>{prompt}</h1>}
     </div>
   );
 };
 
-export default GeneratePrompt;
+export default Result;

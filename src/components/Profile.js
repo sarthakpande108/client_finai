@@ -1,7 +1,8 @@
-import React, { useState ,useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaTrash, FaPlus } from 'react-icons/fa';
 import axios from 'axios';
+import { notification } from 'antd'; // Import Ant Design's notification component
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -18,16 +19,18 @@ const Profile = () => {
   ]);
   const [savedDependents, setSavedDependents] = useState([]);
   const [mobileNumber, setMobileNumber] = useState('');
-  const [aadharNumber, setAadharNumber] = useState('');
   const [isSaving, setIsSaving] = useState(false);
-  const [showDependentFields, setShowDependentFields] = useState(false);
+  // const [showDependentFields, setShowDependentFields] = useState(false);
+  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+  
+
   useEffect(() => {
     const fetchProfileData = async () => {
-      setEmail(localStorage.getItem('email'))
+      setEmail(localStorage.getItem('email'));
       const userId = localStorage.getItem('userId');
       if (userId) {
         try {
-          const response = await axios.get(`https://finaiserver-production.up.railway.app/api/profiles/${userId}`);
+          const response = await axios.get(`${API_BASE_URL}/api/profiles/${userId}`);
           const profile = response.data;
           setName(profile.name || '');
           setAge(profile.age || '');
@@ -37,10 +40,9 @@ const Profile = () => {
           setOccupation(profile.occupation || '');
           setAddress(profile.address || '');
           setMobileNumber(profile.mobileNumber || '');
-          setAadharNumber(profile.aadharNumber || '');
           setSavedDependents(profile.dependents || []);
           setHasDependents(profile.dependents.length > 0);
-          setShowDependentFields(profile.dependents.length <= 0);
+          // setShowDependentFields(profile.dependents.length <= 0);
         } catch (error) {
           console.error('Error fetching profile data:', error);
         }
@@ -48,10 +50,7 @@ const Profile = () => {
     };
 
     fetchProfileData();
-  }, []);
-
-
-
+  }, [API_BASE_URL]);
 
   const handleDependentChange = (index, e) => {
     const { name, value } = e.target;
@@ -59,7 +58,6 @@ const Profile = () => {
     newDependents[index][name] = value;
     setDependents(newDependents);
   };
-  
 
   const addDependent = () => {
     if (dependents.length > 0) {
@@ -68,8 +66,13 @@ const Profile = () => {
         setDependents([...dependents, { name: '', age: '', gender: '', relationship: '' }]);
         if (!hasDependents) {
           setHasDependents(true);
-          setShowDependentFields(false);
+          // setShowDependentFields(false);
         }
+        // Show notification for dependent added
+        notification.success({
+          message: 'Dependent Added',
+          description: 'A new dependent has been added.',
+        });
       } else {
         alert('Please fill out all fields for the current dependent before adding a new one.');
       }
@@ -81,7 +84,6 @@ const Profile = () => {
       }
     }
   };
-  
 
   const removeDependent = (index) => {
     const newDependents = dependents.filter((_, i) => i !== index);
@@ -95,29 +97,31 @@ const Profile = () => {
     const allFieldsFilled = dependents.every(dependent => 
       dependent.name && dependent.age && dependent.gender && dependent.relationship
     );
-  
+
     if (allFieldsFilled) {
       setIsSaving(true);
       setTimeout(() => {
         setSavedDependents(prevSavedDependents => [
-        ...prevSavedDependents,
-        ...dependents
-      ]);
+          ...prevSavedDependents,
+          ...dependents
+        ]);
         setDependents([]); // Clear dependents after saving
         setIsSaving(false);
-        alert('Dependents saved successfully!');
+        // Show notification for dependents saved
+        notification.success({
+          message: 'Dependents Saved',
+          description: 'All dependents have been saved successfully.',
+        });
       }, 1000);
     } else {
       alert('Please fill out all fields for all dependents before saving.');
     }
   };
-  
-  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const profileData = {
-      userId :localStorage.getItem('userId'),
+      userId: localStorage.getItem('userId'),
       name,
       age,
       email,
@@ -127,30 +131,37 @@ const Profile = () => {
       address,
       nationality: 'India',
       mobileNumber,
-      aadharNumber,
       dependents: savedDependents,
     };
 
     try {
       const userId = localStorage.getItem('userId');
       if (userId) {
-        await axios.post(`https://finaiserver-production.up.railway.app/api/profiles`, profileData);
-        alert('Profile updated successfully!');
+        await axios.post(`${API_BASE_URL}/api/profiles`, profileData);
+        // Show notification for profile saved
+        notification.success({
+          message: 'Profile Updated',
+          description: 'Your profile has been updated successfully.',
+        });
         navigate('/assets');
       } else {
-        alert("Login to continue")
+        alert("Login to continue");
         navigate('/login');
       }
     } catch (error) {
       console.error('Error submitting form:', error);
-      alert('There was an error submitting the form. Please try again later.');
+      // Show notification for error
+      notification.error({
+        message: 'Update Failed',
+        description: 'There was an error submitting the form. Please try again later.',
+      });
     }
   };
 
   const removeSavedDependent = (index) => {
     const newSavedDependents = savedDependents.filter((_, i) => i !== index);
     setSavedDependents(newSavedDependents);
-  
+
     // Uncheck the checkbox if there are no dependents left
     if (newSavedDependents.length === 0) {
       setHasDependents(false);
@@ -166,19 +177,19 @@ const Profile = () => {
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Profile Fields */}
-            <div className="animate__animated animate__fadeIn animate__delay-1s">
+            <div className="animate_animated animatefadeIn animate_delay-1s">
               <label className="block text-white">Name</label>
               <input type="text" className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-md text-white transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Your Name" value={name} 
                 onChange={(e) => setName(e.target.value)}
                 required />
             </div>
-            <div className="animate__animated animate__fadeIn animate__delay-1s">
+            <div className="animate_animated animatefadeIn animate_delay-1s">
               <label className="block text-white">Age</label>
               <input type="number" className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-md text-white transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Your Age" value={age} 
                 onChange={(e) => setAge(e.target.value)}
                 required />
             </div>
-            <div className="animate__animated animate__fadeIn animate__delay-1s">
+            <div className="animate_animated animatefadeIn animate_delay-1s">
               <label className="block text-white">Gender</label>
               <select className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-md text-white transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500" value={gender} 
                 onChange={(e) => setGender(e.target.value)} required>
@@ -188,13 +199,13 @@ const Profile = () => {
                 <option value="other">Other</option>
               </select>
             </div>
-            <div className="animate__animated animate__fadeIn animate__delay-1s">
+            <div className="animate_animated animatefadeIn animate_delay-1s">
               <label className="block text-white">Occupation</label>
               <input type="text" className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-md text-white transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Your Occupation" value={occupation} 
                 onChange={(e) => setOccupation(e.target.value)}
                 required />
             </div>
-            <div className="animate__animated animate__fadeIn animate__delay-1s">
+            <div className="animate_animated animatefadeIn animate_delay-1s">
               <label className="block text-white">Marital Status</label>
               <select className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-md text-white transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500" value={maritalStatus} 
                 onChange={(e) => setMaritalStatus(e.target.value)} required>
@@ -205,13 +216,13 @@ const Profile = () => {
                 <option value="widowed">Widowed</option>
               </select>
             </div>
-            <div className="animate__animated animate__fadeIn animate__delay-1s">
+            <div className="animate_animated animatefadeIn animate_delay-1s">
               <label className="block text-white">Address</label>
               <input type="text" className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-md text-white transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Your Address" value={address} 
                 onChange={(e) => setAddress(e.target.value)}
                 required/>
             </div>
-            <div className="animate__animated animate__fadeIn animate__delay-1s">
+            <div className="animate_animated animatefadeIn animate_delay-1s">
               <label className="block text-white">Nationality</label>
               <input
                 type="text"
@@ -222,12 +233,12 @@ const Profile = () => {
             </div>
 
 
-            <div className="animate__animated animate__fadeIn animate__delay-1s">
+            <div className="animate_animated animatefadeIn animate_delay-1s">
               <label className="block text-white">Email</label>
               <input type="email" className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-md text-white transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Your Email" value={email} 
                 onChange={(e) => setEmail(e.target.value)} required />
             </div>
-            <div className="animate__animated animate__fadeIn animate__delay-1s">
+            <div className="animate_animated animatefadeIn animate_delay-1s">
               <label className="block text-white">Mobile Number</label>
               <input 
                 type="tel" 
@@ -241,15 +252,7 @@ const Profile = () => {
                 required
               />
             </div>
-            <div className="animate__animated animate__fadeIn animate__delay-1s">
-              <label className="block text-white">Aadhaar Number</label>
-              <input type="text" className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-md text-white transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Your Aadhaar Number" value={aadharNumber} 
-                onChange={(e) => setAadharNumber(e.target.value)}
-                pattern="[1-9][0-9]{11}}" 
-                minLength={12} 
-                maxLength={12}
-                required />
-            </div>
+
           </div>
 
           <div className="mt-6">
@@ -266,7 +269,7 @@ const Profile = () => {
 
           {hasDependents && (
         <div className="mt-6">
-          {showDependentFields && (
+          {/* {showDependentFields && ( */}
             <div className="flex flex-col space-y-4">
               {dependents.map((dependent, index) => (
                 <div
@@ -340,7 +343,7 @@ const Profile = () => {
                 </button>
               </div>
             </div>
-          )}
+           {/* )} */}
         </div>
       )}
 
