@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { notification } from 'antd'; // Import Ant Design notification
 
 const FinancialGoals = () => {
   const navigate = useNavigate();
@@ -8,18 +9,19 @@ const FinancialGoals = () => {
   const [targetAmount, setTargetAmount] = useState('');
   const [targetYear, setTargetYear] = useState('');
   const [userId, setUserId] = useState(null);
-  
+  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+
 
   useEffect(() => {
     // Retrieve userId from local storage
     const id = localStorage.getItem('userId');
-    setUserId(id);
-  
     if (id) {
+      setUserId(id);
+
       // Fetch existing financial goal data for this user
       const fetchFinancialGoal = async () => {
         try {
-          const response = await axios.get(`https://finaiserver-production.up.railway.app/api/financialgoals/${id}`);
+          const response = await axios.get(`${API_BASE_URL}/api/financialgoals/${id}`);
           const data = response.data;
           setFinancialGoal(data.goal || '');
           setTargetAmount(data.targetAmount || '');
@@ -28,13 +30,11 @@ const FinancialGoals = () => {
           console.error('Error fetching financial goal:', error);
         }
       };
-  
+
       fetchFinancialGoal();
-    } else {
-      console.error('UserId is not available in local storage.');
     }
-  }, []);
-  
+  }, [API_BASE_URL]);
+
   // Get the current year
   const currentYear = new Date().getFullYear();
 
@@ -49,7 +49,10 @@ const FinancialGoals = () => {
     
     // Validate inputs if needed
     if (!financialGoal || !targetAmount || !targetYear) {
-      alert('Please fill out all fields.');
+      notification.error({
+        message: 'Validation Error',
+        description: 'Please fill out all fields.',
+      });
       return;
     }
   
@@ -63,17 +66,23 @@ const FinancialGoals = () => {
     
     try {
       // Send a POST request to the backend
-      const response = await axios.post('https://finaiserver-production.up.railway.app/api/financialgoals', financialGoalData);
+      const response = await axios.post(`${API_BASE_URL}/api/financialgoals`, financialGoalData);
   
       // Handle the response as needed
       console.log('Financial Goal Created:', response.data);
-      alert("Saved Financial Goal")
+      notification.success({
+        message: 'Success',
+        description: 'Financial goal saved successfully!',
+      });
       // Navigate to the next page on success
       navigate('/result');
       
     } catch (error) {
       console.error('Error creating financial goal:', error);
-      alert('There was an error submitting the form. Please try again later.');
+      notification.error({
+        message: 'Submission Error',
+        description: 'There was an error submitting the form. Please try again later.',
+      });
     }
   };
 

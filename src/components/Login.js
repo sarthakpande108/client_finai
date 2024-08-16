@@ -1,22 +1,20 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaGoogle, FaTimes } from 'react-icons/fa';
-import Emailsent from './VerifyEmail';
+import { notification } from 'antd'; // Import Ant Design notification
+import 'antd/dist/reset.css'; // Import Ant Design styles
 
 const Login = ({ onClose }) => {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [isVerificationSent, setIsVerificationSent] = useState(false);
   const [isSignUp, setIsSignUp] = useState(true);
-  const [errorMessage, setErrorMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [showEmailSentPopup, setShowEmailSentPopup] = useState(false);
+  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    setErrorMessage('');
 
     if (isSignUp) {
       await sendVerificationLink();
@@ -29,7 +27,7 @@ const Login = ({ onClose }) => {
 
   const sendVerificationLink = async () => {
     try {
-      const response = await fetch('https://finaiserver-production.up.railway.app/api/auth/signup', {
+      const response = await fetch(`${API_BASE_URL}/api/auth/signup`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
@@ -40,17 +38,29 @@ const Login = ({ onClose }) => {
         throw new Error(errorData.message || 'Unknown error occurred');
       }
 
-      setIsVerificationSent(true);
-      setShowEmailSentPopup(true);
+      // Show success notification and redirect to home page after 5 seconds
+      notification.success({
+        message: 'Verification Email Sent',
+        description: 'A verification email has been sent to your inbox. Redirecting you to the home page...',
+        duration: 5, // Auto close after 5 seconds
+        onClose: () => {
+          navigate('/');
+          onClose(); // Close the login popup
+        },
+      });
     } catch (error) {
       console.error('Error sending verification link:', error);
-      setErrorMessage(`Error sending verification link: ${error.message}`);
+      notification.error({
+        message: 'Error',
+        description: `Error sending verification link: ${error.message}`,
+
+      });
     }
   };
 
   const signIn = async () => {
     try {
-      const response = await fetch('https://finaiserver-production.up.railway.app/api/auth/signin', {
+      const response = await fetch(`${API_BASE_URL}/api/auth/signin`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
@@ -65,14 +75,19 @@ const Login = ({ onClose }) => {
       localStorage.setItem('token', data.token);
       localStorage.setItem('userId', data.id);
       navigate('/profile');
+      onClose(); // Close the login popup
     } catch (error) {
       console.error('Error signing in:', error);
-      setErrorMessage(`Error signing in: ${error.message}`);
+      notification.error({
+        message: 'Error',
+        description:` Error signing in: ${error.message}`,
+      });
     }
   };
 
   const handleGoogleLogin = () => {
-    window.location.href = 'https://finaiserver-production.up.railway.app/api/auth/google';
+    console.log("Google");
+    window.location.href = `${API_BASE_URL}/api/auth/google`;
   };
 
   return (
@@ -86,11 +101,6 @@ const Login = ({ onClose }) => {
         <h2 className="text-2xl font-bold text-white mb-6">
           {isSignUp ? 'Sign Up' : 'Sign In'}
         </h2>
-        {errorMessage && (
-          <div className="bg-red-500 text-white p-2 rounded mb-4">
-            {errorMessage}
-          </div>
-        )}
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-white">Email</label>
@@ -116,17 +126,19 @@ const Login = ({ onClose }) => {
           </div>
           <button
             type="submit"
-            className={`bg-gradient-to-r from-blue-500 to-green-500 text-white px-6 py-3 rounded-md w-full hover:bg-opacity-80 ${
+            className={`relative bg-gradient-to-r from-blue-500 to-green-500 text-white px-6 py-3 rounded-md w-full hover:bg-opacity-80 ${
               isLoading ? 'opacity-50 cursor-not-allowed' : ''
             }`}
             disabled={isLoading}
           >
+            {isLoading && (
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="w-5 h-5 border-4 border-t-transparent border-white border-solid rounded-full animate-spin"></div>
+              </div>
+            )}
             {isLoading ? 'Please wait...' : isSignUp ? 'Sign Up' : 'Sign In'}
           </button>
         </form>
-        {isVerificationSent && isSignUp && (
-          <p className="text-green-500 mt-4">Verification email sent!</p>
-        )}
         <div className="border-t border-gray-700 my-4"></div>
         <h3 className="text-xl font-bold text-white mb-4">Or sign in with</h3>
         <button
@@ -159,7 +171,6 @@ const Login = ({ onClose }) => {
           )}
         </div>
       </div>
-      {showEmailSentPopup && <Emailsent onClose={() => setShowEmailSentPopup(false)} />}
     </div>
   );
 };
