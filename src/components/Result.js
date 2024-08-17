@@ -88,7 +88,7 @@ const Result = () => {
       const prompt = generatePrompt();
 
       // Send prompt to backend for text generation
-      axios.post('https://35fb-35-240-164-212.ngrok-free.app/generate', { prompt })
+      axios.post('https://667f-35-240-164-212.ngrok-free.app/generate', { prompt })
         .then(response => {
           setGeneratedText(response.data.generated_text);
         })
