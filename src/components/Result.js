@@ -97,6 +97,7 @@ const Result = () => {
         });
     }
   }, [profile, assets, financialGoal]);
+  console.log(generatePrompt)
 
   return (
     <div>
