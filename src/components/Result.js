@@ -85,7 +85,7 @@ const Result = () => {
 
   useEffect(() => {
     if (profile && assets && financialGoal) {
-      const prompt = generatePrompt();
+      const prompt ="my name is abc ,my age is 75,currenly working as mechanical engineer with salary of 75000, i am married and i have 2son and 1daughter with age of 23 and 25 respectively.also have have my mom and papa with me their age is 70 and 75 respectively,my financial goal is to go to foreing tour with my family in time frame of  5 years the target amount is 20 lakh.my montly expenditure is 25thousand .and my current saving is 0, i have emergency fund of 5lakh, i have a debt of 1 crore  of home lone with a annual intrest rate of 6.7 percent for a time frame of 20years in that i have already completed my 5 years by paying installment of 20000 per month. i also have life insurace of 50000 per year premium, i  have also invested my money i have invested nealry 2 lakhs in stocks such as  reliance,Bharat dynamics and bpcl ,also i pay SIP of 4000 per month and was paying from past 5 years and have  no fd. so now consider the stock return to 25 percent and sip mutual fund return to 15 percent and intrest rate of 9 percent give me plan.you calculate my risk tollerance,my net worth and give me a plan"
 
       // Send prompt to backend for text generation
       axios.post('https://667f-35-240-164-212.ngrok-free.app/generate', { prompt })
@@ -103,6 +103,7 @@ const Result = () => {
     <div className='bg-black'>
       <h2>Generated Text</h2>
       {generatedText && <p>{generatedText}</p>}
+      <h1>{prompt}</h1>
     </div>
   );
 };
