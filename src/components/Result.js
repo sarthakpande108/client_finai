@@ -97,9 +97,10 @@ const Result = () => {
         });
     }
   }, [profile, assets, financialGoal]);
+  console.log(generatePrompt)
 
   return (
-    <div>
+    <div className='bg-black'>
       <h2>Generated Text</h2>
       {generatedText && <p>{generatedText}</p>}
     </div>
