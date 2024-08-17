@@ -103,6 +103,7 @@ const Result = () => {
     <div className='bg-black'>
       <h2>Generated Text</h2>
       {generatedText && <p>{generatedText}</p>}
+      <h1>{prompt}</h1>
     </div>
   );
 };
