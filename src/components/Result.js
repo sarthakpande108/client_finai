@@ -1,111 +1,386 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-
+import React, { useState, useEffect } from "react";
+import { Layout, Button, Card, Typography, Space, Modal, Spin } from "antd";
+import axios from "axios";
+import { FaCalculator } from "react-icons/fa";
+import CompoundInterestCalculator from "./CompoundInterestCalculator";
+import logo from "../img/logo.webp";
+import "../styles/Result.css";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
+import "react-loading-skeleton/dist/skeleton.css";
+ChartJS.register(ArcElement, Tooltip, Legend);
+const { Header, Content } = Layout;
+const { Title: AntTitle } = Typography;
 const Result = () => {
+  const [loading, setLoading] = useState(true); // Loader for page load
   const [profile, setProfile] = useState({});
   const [assets, setAssets] = useState({});
   const [financialGoal, setFinancialGoal] = useState({});
-  const [generatedText, setGeneratedText] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [isPlanLoading, setIsPlanLoading] = useState(false); // Loader for plan data
+  const [generatedText, setGeneratedText] = useState(""); // For displaying generated text
+  const [displayedText, setDisplayedText] = useState(""); // Text displayed with typewriter effect
+  const [textIndex, setTextIndex] = useState(0); // Index for typewriter effect
+  const [isCalculatorOpen, setIsCalculatorOpen] = useState(false);
+  const [timeoutError, setTimeoutError] = useState(false);
+  const currentYear = new Date().getFullYear();
+  const [marketData, setMarketData] = useState({
+    interestRates: [],
+    niftyReturns: {},
+  });
 
+  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+  const API_LLM_URL= process.env.REACT_APP_LLM_OUTPUT_URL;
+
+  // Fetch profile, assets, and financial goals on component mount
   useEffect(() => {
-    const userId = localStorage.getItem('userId');
+    const userId = localStorage.getItem("userId");
 
-    const fetchProfile = async () => {
+    const fetchData = async () => {
       try {
-        const profileResponse = await axios.get(`https://finaiserver-production.up.railway.app/api/profiles/${userId}`);
+        const [profileResponse, assetsResponse, goalResponse] = await Promise.all([
+          axios.get(`${API_BASE_URL}/api/profiles/${userId}`),
+          axios.get(`${API_BASE_URL}/api/assets/${userId}`),
+          axios.get(`${API_BASE_URL}/api/financialgoals/${userId}`)
+        ]);
+
         setProfile(profileResponse.data);
-      } catch (error) {
-        console.error('Error fetching profile data:', error);
-      }
-    };
-
-    const fetchAssets = async () => {
-      try {
-        const assetsResponse = await axios.get(`https://finaiserver-production.up.railway.app/api/assets/${userId}`);
         setAssets(assetsResponse.data);
-      } catch (error) {
-        console.error('Error fetching assets data:', error);
-      }
-    };
-
-    const fetchFinancialGoal = async () => {
-      try {
-        const goalResponse = await axios.get(`https://finaiserver-production.up.railway.app/api/financialgoals/${userId}`);
         setFinancialGoal(goalResponse.data);
+
+        const interestRates = [
+          { year: "2014 - 2015", return: "8.50 - 8.75" },
+          { year: "2015 - 2016", return: "7.00 - 7.50" },
+          { year: "2016 - 2017", return: "6.50 - 6.90" },
+          { year: "2017 - 2018", return: "6.25 - 6.70" },
+          { year: "2018 - 2019", return: "6.25 - 7.25" },
+          { year: "2019 - 2020", return: "5.70 - 6.40" },
+          { year: "2020 - 2021", return: "5.25 - 5.35" },
+          { year: "2021 - 2022", return: "5.05-5.35" }
+        ];
+
+        const niftyReturns = {
+          "2014": "31.39%",
+          "2015": "-4.06%",
+          "2016": "3.01%",
+          "2017": "28.65%",
+          "2018": "3.15%",
+          "2019": "12.02%",
+          "2020": "14.17%",
+          "2021": "24.12%",
+          "2022": "4.32%",
+          "2023": "9.60%",
+        };
+
+        setMarketData({ interestRates, niftyReturns });
+
+        setLoading(false);
       } catch (error) {
-        console.error('Error fetching financial goal data:', error);
+        console.error("Error fetching data:", error);
+        setLoading(false);
       }
     };
 
-    fetchProfile();
-    fetchAssets();
-    fetchFinancialGoal();
+    fetchData();
   }, []);
 
   const generatePrompt = () => {
-    const {
-      name, age, occupation, maritalStatus, dependents = [],
-    } = profile;
-
-    const {
-      monthlyIncome, monthlyExpenditure, currentSavings,
-      emergencyFund, investments = [], insurance = [], loans = [],
-    } = assets;
-
+    const { name, age, occupation, maritalStatus, dependents = [] } = profile;
+    const { monthlyIncome, monthlyExpenditure, currentSavings, emergencyFund, investments = [], insurance = [], loans = [] } = assets;
     const { goal, targetAmount, deadline } = financialGoal;
+    const { interestRates, niftyReturns } = marketData;
 
-    let prompt = `My name is ${name}, and I am ${age} years old, currently engaged in ${occupation}. I am ${maritalStatus}.`;
+    let prompt = `My name is ${name}, and I am ${age} years old, currently working as an ${occupation}. I am ${maritalStatus}.`;
 
     if (dependents.length > 0) {
-      const dependentsDetails = dependents.map(dep => `${dep.relationship} ${dep.name} with age of ${dep.age}`).join(', ');
+      const dependentsDetails = dependents.map(dep => ` ${dep.relationship} ${dep.name} (${dep.age} years old)`).join(', ');
       prompt += ` I have dependents: ${dependentsDetails}.`;
     }
 
-    prompt += ` I have set a financial goal to ${goal} by the year ${deadline}, with a target amount of ₹${targetAmount} INR. My monthly income is ₹${monthlyIncome} INR, and my monthly expenditure amounts to ₹${monthlyExpenditure} INR. I have accumulated current savings of ₹${currentSavings} INR and an emergency fund of ₹${emergencyFund} INR.`;
+    prompt += ` I have set a financial goal to ${goal} by the year ${deadline}, with a target amount of ₹${targetAmount}. My monthly income is ₹${monthlyIncome}, and my monthly expenditure is ₹${monthlyExpenditure}. I have current savings of ₹${currentSavings} and an emergency fund of ₹${emergencyFund}.`;
+
+    if (loans.length > 0) {
+      const loanDetails = loans.map(loan => {
+        const loanTenure = new Date(loan.expiryDate).getFullYear() - new Date(loan.startDate).getFullYear();
+        const yearsPaid = new Date().getFullYear() - new Date(loan.startDate).getFullYear();
+        return `${loan.type} of ₹${loan.amount} at ${loan.interest}% interest, with a monthly installment of ₹${loan.installamount}. It has a tenure of ${loanTenure} years, and ${yearsPaid} years of installments have been paid.`;
+      }).join(' ');
+      prompt += ` I have the following loans: ${loanDetails}`;
+    }
 
     if (investments.length > 0) {
-      const investmentDetails = investments.map(inv => `${inv.type} valued at ₹${inv.amount} INR`).join(', ');
-      prompt += ` In terms of investments, I hold ${investmentDetails}.`;
+      const investmentDetails = investments.map(inv => ` ${inv.type} worth ₹${inv.amount}`).join(', ');
+      prompt += ` I have investments in ${investmentDetails}.`;
     }
 
     if (insurance.length > 0) {
-      const insuranceDetails = insurance.map(ins => `${ins.type} policy with ${ins.provider}, paying a premium of ₹${ins.premium} INR, providing coverage of ₹${ins.coverage} INR`).join(', ');
+      const insuranceDetails = insurance.map(ins => ` ${ins.type} with ${ins.provider}, paying a premium of ₹${ins.premium} for coverage of ₹${ins.coverage}`).join(', ');
       prompt += ` I also have insurance policies including ${insuranceDetails}.`;
     }
 
-    if (loans.length > 0) {
-      const loanDetails = loans.map(loan => `${loan.type} of ₹${loan.amount} INR at an interest rate of ${loan.interest}%, with a monthly installment of ₹${loan.installamount} INR started in year ${loan.startDate} till ${loan.expiryDate}`).join(', ');
-      prompt += ` Additionally, I have loans including ${loanDetails}.`;
+    if (interestRates.length > 0) {
+      const interestRateSummary = interestRates.map(rate => `In ${rate.year}, the interest rates ranged between ${rate.return}.`).join(' ');
+      prompt += ` Historical interest rates: ${interestRateSummary}`;
     }
 
-    prompt += ` Please consider the following expected returns: a stock return of 15%, a SIP mutual fund return of 10%, and an interest rate of 9%. Based on this information, kindly assess my risk tolerance, calculate my net worth, and provide a tailored financial plan to help me achieve my financial goal.`;
+    if (Object.keys(niftyReturns).length > 0) {
+      const niftySummary = Object.entries(niftyReturns).map(([year, returnVal]) => `${year} saw a return of ${returnVal}`).join('. ');
+      prompt += ` Historical NIFTY 50 returns: ${niftySummary}.`;
+    }
 
+    // Provide recommendations based on data
+    if (loans.length > 0) {
+      prompt += ` Given the existing loans, I recommend prioritizing repayment of these debts to reduce financial burden.`;
+    }
+
+    if (!emergencyFund || emergencyFund < (monthlyExpenditure * 6)) {
+      prompt += ` It is advisable to build an emergency fund that covers at least 6 months of your monthly expenditure.`;
+    }
+
+    prompt += ` Based on this information, please evaluate my risk tolerance, calculate my net worth, and provide three tailored financial plans to help me achieve my financial goal.`;
     return prompt;
   };
 
-  const handleGenerate = async () => {
-    const prompt ='my name is abc ,my age is 60,currenly working as mechanical engineer with salary of 75000, i am married and i have 2son and 1daughter with age of 23 and 25 respectively.also have have my mom and papa with me their age is 70 and 75 respectively,my financial goal is to save 5000000 for my retirement. my montly expenditure is 30thousand (excluding loans,sip etc).and my current saving is 500000, i have emergency fund of 500000, i have a debt of 2500000  of home lone with a annual intrest rate of 6.7 percent for a time frame of 15years in that i have already completed my 10 years by paying installment of 20000 per month. i also have life insurace of 50000 per year premium which i buyed from Life insurance corporations, i  have also invested my money i have invested nealry 200000 in stocks such as  reliance,Bharat dynamics and bpcl ,also i pay SIP of 4000 per month and was paying from past 5 years and have 500000 in my fixed deposit. so now consider the stock return  of past 3years to be(10,15,12) percent and sip mutual fund return of 3years to be (12,14,9) percent and intrest rate of past 3 years (7,9,8.5) percent give me plan such that i can acheive my goal in my timeframe, by calculating my risk based on my investments and dependents give me 3 plans. plans should be such that if I have  loan then plan should first focus on debt reduction,then check if insurace is there if not then suggest and then give plan with remeaining money, so that he can acheive his goal.plan should include mutual funds,recurring deposts,fixed deposits,bonds and stocks.based on this give me 3 plans'
-    setLoading(true);
+  const generatePlan = async () => {
+    setIsPlanLoading(true);
+    setTimeoutError(false); // Reset timeout error
+
+    const prompt = generatePrompt();
+
+    const apiRequest = axios.post(`https://0678-34-145-76-144.ngrok-free.app/generate`, { prompt });
+
+    const timeoutPromise = new Promise((_, reject) =>
+      setTimeout(() => reject(new Error("Request timed out")), 300000) // 5-minute timeout
+    );
+
     try {
-      const response = await axios.post('https://8fc0-34-171-234-32.ngrok-free.app/generate', { prompt });
+      const response = await Promise.race([apiRequest, timeoutPromise]);
       setGeneratedText(response.data.generated_text);
     } catch (error) {
-      console.error('Error generating text:', error);
+      console.error("Error generating text:", error);
+      setGeneratedText("Sorry, the plan could not be generated at this time.");
+      setTimeoutError(true);
+    } finally {
+      setIsPlanLoading(false);
     }
-    setLoading(false);
   };
 
+  const handleGeneratePlanClick = () => {
+    if (profile && assets && financialGoal) {
+      generatePlan();
+      console.log(prompt)
+    } else {
+      console.error("Data is not fully loaded yet");
+    }
+  };
+
+  // Typewriter effect
+  useEffect(() => {
+    if (generatedText) {
+      const intervalId = setInterval(() => {
+        if (textIndex < generatedText.length) {
+          setDisplayedText((prev) => prev + generatedText[textIndex]);
+          setTextIndex((prev) => prev + 1);
+        } else {
+          clearInterval(intervalId);
+        }
+      }, 20); // Adjust typing speed here
+
+      return () => clearInterval(intervalId);
+    }
+  }, [textIndex]);
+
+  const handleOpenCalculator = () => setIsCalculatorOpen(!isCalculatorOpen);
+  const deadlineYear = financialGoal?.deadline;
+  const yearsRemaining = deadlineYear ? deadlineYear - currentYear : "";
+
+
   return (
-    <div className='bg-black'>
-      <h2>Generated Text</h2>
+    <Layout style={{ minHeight: "100vh", backgroundColor: "#000000" }}>
       {loading ? (
-        <div>Loading...</div>
+        <Spin
+          size="large"
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            minHeight: "100vh",
+          }}
+        />
       ) : (
-        <div>{generatedText}</div>
+        <>
+          <Header className="px-6 flex  justify-between">
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <AntTitle className="font-bold "
+                style={{ color: "#ffffff", margin: 0, fontSize: "24px" }}
+              >
+                FinAI
+              </AntTitle>
+            </div>
+            <Space>
+              <Button
+                type="primary"
+                icon={<FaCalculator />}
+                size="large"
+                onClick={handleOpenCalculator}
+              >
+                Calculator
+              </Button>
+            </Space>
+          </Header>
+          <Content style={{ padding: "24px", overflowY: "auto" }}>
+            <AntTitle
+              level={2}
+              style={{
+                textAlign: "center",
+                color: "#ffffff",
+                fontSize: "28px",
+              }}
+            >
+              Hello, {profile.name || <Skeleton width={200} />}
+            </AntTitle>
+
+            {/* Financial Details Section */}
+            <div className="mb-6">
+              <h2 className="text-4xl font-bold mb-6 mt-8 text-2xl text-blue-500">
+                Financial Details
+              </h2>
+              <div className="bg-gray-800 p-4 rounded-lg shadow-md">
+                <table className="min-w-full divide-y divide-gray-200">
+                  <tbody>
+                  <tr>
+                      <td className="px-6 py-4 text-lg  text-gray-200">
+                        <label className="font-bold"> Contact: </label>
+                        {profile.email || <Skeleton width={150} />}
+                      </td>
+                      <td className="px-6 py-4 text-lg text-gray-200">
+                        <label className="font-bold text-white">
+                          Occupation:
+                        </label>{" "}
+                        {profile.occupation || <Skeleton width={100} />}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td colSpan="3" className="py-2">
+                        <hr className="border-gray-600" />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="px-6 py-4 text-lg  text-gray-200">
+                        <label className="font-bold">Income: </label> ₹
+                        {assets.monthlyIncome || <Skeleton width={100} />}
+                      </td>
+                      <td className="px-6 py-4 text-lg  text-gray-200">
+                        <label className="font-bold">Expenditure:</label> ₹
+                        {assets.monthlyExpenditure || <Skeleton width={100} />}
+                      </td>
+                      <td className="px-6 py-4 text-lg  text-gray-200">
+                        <label className="font-bold">Emergency Fund: </label>₹
+                        {assets.emergencyFund || <Skeleton width={100} />}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td colSpan="3" className="py-2">
+                        <hr className="border-gray-600" />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="px-6 py-4 text-lg  text-gray-200">
+                        <label className="font-bold">Financial Goal:</label>{" "}
+                        {financialGoal.goal || <Skeleton width={100} />}
+                      </td>
+                      <td className="px-6 py-4 text-lg text-gray-200">
+                        <label className="font-bold">Target Amount:</label> ₹
+                        {financialGoal.targetAmount || <Skeleton width={100} />}
+                      </td>
+                      <td className="px-6 py-4 text-lg  text-gray-200">
+                        <label className="font-bold">TimeFrame:</label>{" "}
+                        {yearsRemaining ? (
+                          `${yearsRemaining} years`
+                        ) : (
+                          <Skeleton width={100} />
+                        )}{" "}
+                      </td>
+                    </tr>
+                    
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            {/* Generated Plan Section */}
+            <AntTitle level={2} style={{ color: "#ffffff" }}>
+              <label className="text-4xl font-bold mb-6 mt-8 text-2xl text-blue-500">Financial Plan</label>
+            </AntTitle>
+            <button
+            className="bg-blue-500 text-white mb-5 text-sm font-bold py-4 px-6 rounded"
+
+            onClick={handleGeneratePlanClick}>
+              Generate
+          </button>
+            <Card className="bg-gray-800 border-gray-600">
+              {isPlanLoading ? (
+                <div class="w-9/12 mx-auto">
+                  <div class="bg-gray-700 h-10 w-3/5 mb-2.5 rounded-md animate-pulse"></div>
+                  <div class="bg-gray-700 h-10 w-4/5 mb-2.5 rounded-md animate-pulse"></div>
+                  <div class="bg-gray-700 h-10 w-9/10 mb-2.5 rounded-md animate-pulse"></div>
+                  <div class="bg-gray-700 h-10 w-7/10 mb-2.5 rounded-md animate-pulse"></div>
+                  <div class="bg-gray-700 h-10 w-1/2 rounded-md animate-pulse"></div>
+                </div>
+              ) : (
+                <Card style={{ backgroundColor: "black", color: "#ffffff" }}>
+                  <Typography.Paragraph
+                    style={{
+                      whiteSpace: "pre-line",
+                      fontSize: "16px",
+                      color: "#ffffff",
+                    }}
+                  >
+                    {displayedText}
+                  </Typography.Paragraph>
+                </Card>
+              )}
+            </Card>
+
+            {/* Financial Calculator */}
+            
+          </Content>
+          <Modal
+  visible={isCalculatorOpen}
+  onCancel={handleOpenCalculator}
+  footer={null}
+  bodyStyle={{
+    padding: 0, // Remove padding
+  }}
+  width={400}
+  style={{
+    position: 'fixed',
+    top: '10px',
+    right: '10px',
+    margin: 0,
+    borderRadius: '8px',
+  }}
+  closeIcon={
+    <span
+      style={{
+        backgroundColor: 'red',
+        color: 'white',
+        borderRadius: '50%',
+        padding: '5px',
+        fontSize: '16px',
+        display: 'inline-block',
+        lineHeight: '16px',
+        textAlign: 'center',
+      }}
+    >
+      </span> }
+>
+    <CompoundInterestCalculator />
+</Modal>
+
+        </>
       )}
-      <button onClick={handleGenerate}>Generate</button>
-    </div>
+    </Layout>
   );
 };
 

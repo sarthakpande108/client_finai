@@ -173,24 +173,24 @@ const Profile = () => {
     <div className="min-h-screen bg-black text-white bg-cover bg-center" style={{ backgroundImage: 'url(/intro.avif)', fontFamily: 'Poppins, sans-serif', fontSize: '16px' }}>
       <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
       <div className="container mx-auto p-6 bg-transparent min-h-screen">
-        <h1 className="text-4xl font-bold mb-6" style={{ marginTop: '50px' }}>Profile Information</h1>
+        <h1 className="text-4xl font-bold mb-6  text-blue-500" style={{ marginTop: '50px' }}>Profile Information</h1>
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Profile Fields */}
             <div className="animate_animated animatefadeIn animate_delay-1s">
-              <label className="block text-white">Name</label>
+              <label className="block text-white font-bold mb-2 ml-2">Name</label>
               <input type="text" className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-md text-white transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Your Name" value={name} 
                 onChange={(e) => setName(e.target.value)}
                 required />
             </div>
             <div className="animate_animated animatefadeIn animate_delay-1s">
-              <label className="block text-white">Age</label>
+              <label className="block text-white font-bold mb-2 ml-2">Age</label>
               <input type="number" className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-md text-white transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Your Age" value={age} 
                 onChange={(e) => setAge(e.target.value)}
                 required />
             </div>
             <div className="animate_animated animatefadeIn animate_delay-1s">
-              <label className="block text-white">Gender</label>
+              <label className="block text-white font-bold mb-2 ml-2">Gender</label>
               <select className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-md text-white transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500" value={gender} 
                 onChange={(e) => setGender(e.target.value)} required>
                 <option value="">Select Gender</option>
@@ -200,14 +200,14 @@ const Profile = () => {
               </select>
             </div>
             <div className="animate_animated animatefadeIn animate_delay-1s">
-              <label className="block text-white">Occupation</label>
+              <label className="block text-white font-bold mb-2 ml-2">Occupation</label>
               <input type="text" className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-md text-white transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Your Occupation" value={occupation} 
                 onChange={(e) => setOccupation(e.target.value)}
                 required />
             </div>
             <div className="animate_animated animatefadeIn animate_delay-1s">
-              <label className="block text-white">Marital Status</label>
-              <select className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-md text-white transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500" value={maritalStatus} 
+              <label className="block text-white font-bold mb-2 ml-2">Marital Status</label>
+              <select className="w-50 px-4 py-2 bg-gray-800 border border-gray-700 rounded-md text-white transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500" value={maritalStatus} 
                 onChange={(e) => setMaritalStatus(e.target.value)} required>
                 <option value="">Select Marital Status</option>
                 <option value="single">Single</option>
@@ -217,13 +217,13 @@ const Profile = () => {
               </select>
             </div>
             <div className="animate_animated animatefadeIn animate_delay-1s">
-              <label className="block text-white">Address</label>
+              <label className="block text-white font-bold mb-2 ml-2">Address</label>
               <input type="text" className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-md text-white transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Your Address" value={address} 
                 onChange={(e) => setAddress(e.target.value)}
                 required/>
             </div>
             <div className="animate_animated animatefadeIn animate_delay-1s">
-              <label className="block text-white">Nationality</label>
+              <label className="block text-white font-bold mb-2 ml-2">Nationality</label>
               <input
                 type="text"
                 value="India"
@@ -234,12 +234,12 @@ const Profile = () => {
 
 
             <div className="animate_animated animatefadeIn animate_delay-1s">
-              <label className="block text-white">Email</label>
+              <label className="block text-white font-bold mb-2 ml-2">Email</label>
               <input type="email" className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-md text-white transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Your Email" value={email} 
                 onChange={(e) => setEmail(e.target.value)} required />
             </div>
             <div className="animate_animated animatefadeIn animate_delay-1s">
-              <label className="block text-white">Mobile Number</label>
+              <label className="block text-white font-bold mb-2 ml-2">Mobile Number</label>
               <input 
                 type="tel" 
                 className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-md text-white transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500" 
@@ -256,7 +256,7 @@ const Profile = () => {
           </div>
 
           <div className="mt-6">
-            <label className="block text-white">
+            <label className="block text-white font-bold text-xl">
               <input 
                 type="checkbox" 
                 className="mr-2" 
@@ -327,17 +327,15 @@ const Profile = () => {
                 <button
                   type="button"
                   onClick={addDependent}
-                  className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-md"
-                  style={{ background: 'linear-gradient(45deg, #00f260, #0575e6)' }}
+                  className="bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold py-2 px-4 rounded "
                 >
-                  <FaPlus className="mr-2" /> Add Dependent
+                  <label htmlFor="" className='font-bold text-xl'>+</label> Add Dependent
                 </button>
                 <button
                   type="button"
                   onClick={handleSaveDependents}
-                  className={`px-4 py-2 bg-green-600 text-white rounded-md ${isSaving ? 'opacity-50 cursor-not-allowed' : ''}`}
+                  className={`bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold py-3 px-3 rounded ${isSaving ? 'opacity-50 cursor-not-allowed' : ''}`}
                   disabled={isSaving}
-                  style={{ background: 'linear-gradient(45deg, #00f260, #0575e6)' }}
                 >
                   {isSaving ? 'Saving...' : 'Save Dependents'}
                 </button>
@@ -349,7 +347,7 @@ const Profile = () => {
 
         {savedDependents.length > 0 && (
           <div className="mt-6">
-            <h2 className="text-2xl font-semibold mb-4">Saved Dependents</h2>
+            <h2 className="text-lg font-semibold mb-4">Saved Dependents</h2>
               <table className="min-w-full bg-gray-800 border border-gray-700 rounded-md">
                 <thead>
                   <tr>
@@ -388,15 +386,14 @@ const Profile = () => {
           <button 
             type="button" 
             onClick={() => navigate('/')} 
-            style={{ background: 'linear-gradient(45deg, #00f260, #0575e6)' }}
-            className="px-4 py-2 bg-blue-600 text-white rounded-md"
+
+            className="bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold py-3 px-3 rounded"
           >
             Back to Home
           </button>
           <button 
-            type="submit" 
-            style={{ background: 'linear-gradient(45deg, #00f260, #0575e6)' }}
-            className="px-4 py-2 bg-gray-600 text-white rounded-md"
+            type="submit"
+            className="bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold py-3 px-3 rounded"
           >
             Save & Continue
           </button>

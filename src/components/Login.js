@@ -99,7 +99,7 @@ const Login = ({ onClose }) => {
           </button>
         </div>
         <h2 className="text-2xl font-bold text-white mb-6">
-          {isSignUp ? 'Sign Up' : 'Sign In'}
+          {isSignUp ? 'Sign In' : 'LOGIN'}
         </h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
@@ -126,7 +126,7 @@ const Login = ({ onClose }) => {
           </div>
           <button
             type="submit"
-            className={`relative bg-gradient-to-r from-blue-500 to-green-500 text-white px-6 py-3 rounded-md w-full hover:bg-opacity-80 ${
+            className={`bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold w-full py-3 rounded ${
               isLoading ? 'opacity-50 cursor-not-allowed' : ''
             }`}
             disabled={isLoading}
@@ -136,7 +136,7 @@ const Login = ({ onClose }) => {
                 <div className="w-5 h-5 border-4 border-t-transparent border-white border-solid rounded-full animate-spin"></div>
               </div>
             )}
-            {isLoading ? 'Please wait...' : isSignUp ? 'Sign Up' : 'Sign In'}
+            {isLoading ? 'Please wait...' : isSignUp ? 'Sign In' : 'Login'}
           </button>
         </form>
         <div className="border-t border-gray-700 my-4"></div>
@@ -155,7 +155,7 @@ const Login = ({ onClose }) => {
                 onClick={() => setIsSignUp(false)}
                 className="text-blue-400"
               >
-                Sign In
+                Login
               </button>
             </p>
           ) : (
@@ -165,7 +165,7 @@ const Login = ({ onClose }) => {
                 onClick={() => setIsSignUp(true)}
                 className="text-blue-400"
               >
-                Sign Up
+                Sing In
               </button>
             </p>
           )}
