@@ -30,7 +30,7 @@ const Result = () => {
   });
 
   const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
-  const API_LLM_URL= process.env.REACT_APP_LLM_OUTPUT_URL;
+
 
   // Fetch profile, assets, and financial goals on component mount
   useEffect(() => {
@@ -147,7 +147,7 @@ const Result = () => {
 
     const prompt = generatePrompt();
 
-    const apiRequest = axios.post(`https://0678-34-145-76-144.ngrok-free.app/generate`, { prompt });
+    const apiRequest = axios.post(`https://735a-34-44-160-84.ngrok-free.app/generate`, { prompt });
 
     const timeoutPromise = new Promise((_, reject) =>
       setTimeout(() => reject(new Error("Request timed out")), 300000) // 5-minute timeout
