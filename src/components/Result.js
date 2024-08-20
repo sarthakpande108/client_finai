@@ -118,11 +118,6 @@ const Result = () => {
       prompt += ` I also have insurance policies including ${insuranceDetails}.`;
     }
 
-    if (interestRates.length > 0) {
-      const interestRateSummary = interestRates.map(rate => `In ${rate.year}, the interest rates ranged between ${rate.return}.`).join(' ');
-      prompt += ` Historical interest rates: ${interestRateSummary}`;
-    }
-
     if (Object.keys(niftyReturns).length > 0) {
       const niftySummary = Object.entries(niftyReturns).map(([year, returnVal]) => `${year} saw a return of ${returnVal}`).join('. ');
       prompt += ` Historical NIFTY 50 returns: ${niftySummary}.`;
@@ -130,14 +125,14 @@ const Result = () => {
 
     // Provide recommendations based on data
     if (loans.length > 0) {
-      prompt += ` Given the existing loans, I recommend prioritizing repayment of these debts to reduce financial burden.`;
+      prompt += ` Given the existing loans, I recommend prioritizing repayment of these debts to reduce financial burden.before giving plans for financial goal`;
     }
 
     if (!emergencyFund || emergencyFund < (monthlyExpenditure * 6)) {
-      prompt += ` It is advisable to build an emergency fund that covers at least 6 months of your monthly expenditure.`;
+      prompt += ` give advice if not  an emergency fund that covers at least 6 months of your monthly expenditure.`;
     }
 
-    prompt += ` Based on this information, please evaluate my risk tolerance, calculate my net worth, and provide three tailored financial plans to help me achieve my financial goal.`;
+    prompt += `give me 3 plans which are diffrent from each other so that it can acheive financial goal in required timeframe.plan should include recomendation such as increse sip ,increse investnemt,add fund in fixed deposit,recurring deposit etc so that i can acheive my finaical goal ,calcualte my risk assemenet based on assets and dependents`;
     return prompt;
   };
 
@@ -147,7 +142,7 @@ const Result = () => {
 
     const prompt = generatePrompt();
 
-    const apiRequest = axios.post(`https://735a-34-44-160-84.ngrok-free.app/generate`, { prompt });
+    const apiRequest = axios.post(`https://0109-35-233-232-203.ngrok-free.app/generate`, { prompt });
 
     const timeoutPromise = new Promise((_, reject) =>
       setTimeout(() => reject(new Error("Request timed out")), 300000) // 5-minute timeout
