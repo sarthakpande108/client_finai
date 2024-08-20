@@ -142,7 +142,7 @@ const Result = () => {
 
     const prompt = generatePrompt();
 
-    const apiRequest = axios.post(`https://0109-35-233-232-203.ngrok-free.app/generate`, { prompt });
+    const apiRequest = axios.post(`https://7060-34-145-4-128.ngrok-free.app/generate`, { prompt });
 
     const timeoutPromise = new Promise((_, reject) =>
       setTimeout(() => reject(new Error("Request timed out")), 300000) // 5-minute timeout
