@@ -89,12 +89,12 @@ const FinancialGoals = () => {
   return (
     <div className="min-h-screen bg-black text-white bg-cover bg-center" style={{ backgroundImage: 'url(/intro.avif)' }}>
       <div className="container mx-auto p-6 bg-transparent min-h-screen">
-        <h1 className="text-3xl font-bold mb-6" style={{ marginTop: '50px' }}>Financial Goals</h1>
+        <h1 className="text-4xl font-bold mb-6 mt-8 text-5xl text-blue-500" style={{ marginTop: '50px' }}>Financial Goals</h1>
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Financial Goal Fields */}
             <div>
-              <label className="block text-white">Financial Goal</label>
+              <label className="block text-white text-xl font-semibold mb-2 ml-2">Financial Goal</label>
               <input
                 type="text"
                 value={financialGoal}
@@ -105,7 +105,7 @@ const FinancialGoals = () => {
               />
             </div>
             <div>
-              <label className="block text-white">Target Amount</label>
+              <label className="block text-white text-xl font-semibold mb-2 ml-2">Target Amount</label>
               <input
                 type="number"
                 value={targetAmount}
@@ -116,7 +116,7 @@ const FinancialGoals = () => {
               />
             </div>
             <div>
-              <label className="block text-white">Target Year</label>
+              <label className="block text-white text-xl font-semibold mb-2 ml-2">Target Year</label>
               <select
                 value={targetYear}
                 onChange={(e) => setTargetYear(e.target.value)}
@@ -137,15 +137,15 @@ const FinancialGoals = () => {
             <button
               type="button"
               onClick={() => navigate('/assets')}
-              className="text-white bg-gradient-to-r from-blue-500 to-green-500 p-2 rounded-md hover:bg-opacity-80"
-              style={{ background: 'linear-gradient(45deg, #00f260, #0575e6)' }}
+              className="bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold py-2 px-3 rounded"
+
             >
               Go Back
             </button>
             <button
               type="submit"
-              className="text-white bg-gradient-to-r from-blue-500 to-green-500 p-2 rounded-md hover:bg-opacity-80"
-              style={{ background: 'linear-gradient(45deg, #00f260, #0575e6)' }}
+              className="bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold py-2 px-3 rounded"
+
             >
               Generate Plan
             </button>

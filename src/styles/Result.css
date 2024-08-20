@@ -1,17 +1,68 @@
-@keyframes word-by-word {
-    0% { opacity: 0; }
-    100% { opacity: 1; }
+body {
+  background-color: #000000; /* Black background */
+  color: #ffffff; /* White text color */
+}
+
+.ant-layout-header {
+  background-color: #1a1a1a; /* Dark gray background for header */
+}
+
+.ant-card {
+  /* background-color: #1a1a1a; Dark gray background for card */
+  border-color: #333333; /* Slightly lighter border for card */
+}
+
+.ant-layout-content {
+  background-color: #000000; /* Black background */
+  color: #ffffff; /* White text */
+}
+
+.ant-table-cell {
+  background-color: #1a1a1a; /* Dark background for table cells */
+  color: #ffffff; /* White text for table cells */
+}
+
+.table-section hr {
+  border-color: #333333; /* Gray line color */
+}
+
+.ant-modal-content {
+  background-color: #1a1a1a; /* Dark background for modal */
+  color: #ffffff; /* White text for modal */
+}
+
+.ant-modal-header {
+  background-color: #1a1a1a; /* Dark header for modal */
+}
+
+.ant-modal-title {
+  color: #ffffff; /* White title for modal */
+}
+
+.ant-modal-close-x {
+  color: #ffffff; /* White close icon for modal */
+}
+
+.ant-modal-body {
+  background-color: #1a1a1a; /* Dark body for modal */
+  color: #ffffff; /* White text for modal */
+}
+@keyframes shimmer {
+  0% {
+    background-position: -200px 0;
   }
-  
-  .word-by-word li {
-    animation: word-by-word 0.5s ease forwards;
-    animation-delay: calc(var(--i) * 0.1s);
-    opacity: 0;
+  100% {
+    background-position: 200px 0;
   }
-  
-  /* For each list item, set a delay based on the index */
-  .word-by-word li:nth-child(1) { --i: 1; }
-  .word-by-word li:nth-child(2) { --i: 2; }
-  .word-by-word li:nth-child(3) { --i: 3; }
-  /* Repeat this pattern for as many list items as needed */
-  
+}
+
+.skeleton-shimmer {
+  background: linear-gradient(
+    to right,
+    #4a4a4a 4%,
+    #5a5a5a 25%,
+    #4a4a4a 36%
+  );
+  background-size: 1000px 100%;
+  animation: shimmer 2s infinite linear;
+}

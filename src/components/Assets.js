@@ -233,16 +233,16 @@ const Assets = () => {
   return (
     <div
       className="min-h-screen bg-black text-white bg-cover bg-center"
-      style={{ backgroundImage: "url(/intro.avif)" }}
+
     >
       <div className="container mx-auto p-6 bg-transparent min-h-screen ">
-        <h1 className="text-4xl font-bold mb-6" style={{ marginTop: "50px" }}>
+        <h1 className="text-4xl font-bold mb-6 mt-8 text-5xl text-blue-500">
           Assets
         </h1>
         <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 ml-2 mb-5">
             <div>
-              <label className="block text-white">Monthly Income</label>
+              <label className="block text-white mb-2 font-semibold">Monthly Income</label>
               <input
                 type="number"
                 value={monthlyIncome}
@@ -253,7 +253,7 @@ const Assets = () => {
               />
             </div>
             <div>
-              <label className="block text-white">Monthly Expenditure</label>
+              <label className="block text-white mb-2 font-semibold">Monthly Expenditure</label>
               <input
                 type="number"
                 value={monthlyExpenditure}
@@ -264,7 +264,7 @@ const Assets = () => {
               />
             </div>
             <div>
-              <label className="block text-white">Current Savings</label>
+              <label className="block text-white mb-2 font-semibold">Current Savings</label>
               <input
                 type="number"
                 value={currentSavings}
@@ -275,7 +275,7 @@ const Assets = () => {
               />
             </div>
             <div>
-              <label className="block text-white">Emergency Fund</label>
+              <label className="block text-white mb-2 font-semibold">Emergency Fund</label>
               <input
                 type="number"
                 value={emergencyFund}
@@ -288,11 +288,11 @@ const Assets = () => {
           </div>
 
           {/* Investments Section */}
-          <div>
-            <label className="block text-white">
+          <div className="mt-5 ml-2">
+            <label className="block text-white font-bold text-2xl ">
               Do you have any current investments?
             </label>
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-4 mt-3 ml-2">
               <label className="text-white">
                 <input
                   type="radio"
@@ -321,7 +321,7 @@ const Assets = () => {
                 {showInvestmentFields && (
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                      <label className="block text-white">
+                      <label className="block text-white mb-2 font-semibold">
                         Investment Type
                       </label>
                       <input
@@ -333,7 +333,7 @@ const Assets = () => {
                       />
                     </div>
                     <div>
-                      <label className="block text-white">
+                      <label className="block text-white mb-2 font-semibold">
                         Amount Invested
                       </label>
                       <input
@@ -351,10 +351,8 @@ const Assets = () => {
                     <button
                       type="button"
                       onClick={() => setShowInvestmentFields(true)}
-                      className="text-white bg-gradient-to-r from-blue-500 to-green-500 p-2 rounded-md hover:bg-opacity-80"
-                      style={{
-                        background: "linear-gradient(45deg, #00f260, #0575e6)",
-                      }}
+                      className="bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold py-2 px-3 rounded"
+
                     >
                       <FaPlus className="inline mr-2" /> Add Investment
                     </button>
@@ -363,67 +361,66 @@ const Assets = () => {
                     <button
                       type="button"
                       onClick={addInvestment}
-                      className="text-white bg-gradient-to-r from-blue-500 to-green-500 p-2 rounded-md hover:bg-opacity-80"
-                      style={{
-                        background: "linear-gradient(45deg, #00f260, #0575e6)",
-                      }}
+                      className="bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold py-2 px-3 "
+
                     >
                       Save Investment
                     </button>
                   )}
                 </div>
                 {investments.length > 0 && (
-                  <div className="mt-4 overflow-x-auto">
-                    <table className="w-full text-white border border-gray-700">
-                      <thead>
-                        <tr>
-                          <th className="border border-gray-600 bg-gray-800 px-4 py-2">
-                            Investment Type
-                          </th>
-                          <th className="border border-gray-600 bg-gray-800 px-4 py-2">
-                            Amount
-                          </th>
-                          <th className="border border-gray-600 bg-gray-800 px-4 py-2">
-                            Action
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {investments.map((investment, index) => (
-                          <tr key={index}>
-                            <td className="border border-gray-600 px-4 py-2">
-                              {investment.type}
-                            </td>
-                            <td className="border border-gray-600 px-4 py-2">
-                              {investment.amount}
-                            </td>
-                            <td className="border border-gray-600 px-4 py-2">
-                              <button
-                                onClick={() =>
-                                  handleDelete("investment", index)
-                                }
-                                className="text-red-500"
-                              >
-                                <FaTrash />
-                              </button>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
+ <div className="mt-4 overflow-x-auto">
+ <div className="min-w-full inline-block align-middle mb-5">
+   <table className="min-w-full text-white border border-gray-700">
+     <thead>
+       <tr>
+         <th className="border border-gray-600  bg-gray-800 px-4 py-2 text-center">
+           Investment Type
+         </th>
+         <th className="border border-gray-600 bg-gray-800 px-4 py-2 text-center">
+           Amount
+         </th>
+         <th className="border border-gray-600 bg-gray-800 px-4 py-2 text-center">
+           Action
+         </th>
+       </tr>
+     </thead>
+     <tbody>
+       {investments.map((investment, index) => (
+         <tr key={index}>
+           <td className="border border-gray-600 px-4 py-2 text-center">
+             {investment.type}
+           </td>
+           <td className="border border-gray-600 px-4 py-2 text-center">
+             {investment.amount}
+           </td>
+           <td className="border border-gray-600 px-4 py-2 text-center">
+             <button
+               onClick={() => handleDelete("investment", index)}
+               className="text-red-500"
+             >
+               <FaTrash />
+             </button>
+           </td>
+         </tr>
+       ))}
+     </tbody>
+   </table>
+ </div>
+</div>
+
                 )}
               </div>
             )}
           </div>
 
           {/* Insurance Section */}
-          <div>
-            <label className="block text-white">
+          <div className="ml-2">
+            <label className="block text-white text-2xl font-bold mb-2">
               Do you have any insurance policies?
             </label>
             <div className="flex items-center space-x-4">
-              <label className="text-white">
+              <label className="text-white ml-2">
                 <input
                   type="radio"
                   name="insurance"
@@ -451,7 +448,7 @@ const Assets = () => {
                 {showInsuranceFields && (
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                      <label className="block text-white">Insurance Type</label>
+                      <label className="block text-white font-semibold mb-2">Insurance Type</label>
                       <input
                         type="text"
                         value={insuranceType}
@@ -461,7 +458,7 @@ const Assets = () => {
                       />
                     </div>
                     <div>
-                      <label className="block text-white">
+                      <label className="block text-white font-semibold mb-2">
                         Insurance Provider
                       </label>
                       <input
@@ -473,7 +470,7 @@ const Assets = () => {
                       />
                     </div>
                     <div>
-                      <label className="block text-white">Premium Amount</label>
+                      <label className="block text-white font-semibold mb-2">Premium Amount</label>
                       <input
                         type="number"
                         value={premium}
@@ -483,7 +480,7 @@ const Assets = () => {
                       />
                     </div>
                     <div>
-                      <label className="block text-white">
+                      <label className="block text-white font-semibold mb-2">
                         Coverage Amount
                       </label>
                       <input
@@ -501,10 +498,7 @@ const Assets = () => {
                     <button
                       type="button"
                       onClick={() => setShowInsuranceFields(true)}
-                      className="text-white bg-gradient-to-r from-blue-500 to-green-500 p-2 rounded-md hover:bg-opacity-80"
-                      style={{
-                        background: "linear-gradient(45deg, #00f260, #0575e6)",
-                      }}
+                      className="bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold py-2 px-3 rounded"
                     >
                       <FaPlus className="inline mr-2" /> Add Insurance
                     </button>
@@ -513,10 +507,8 @@ const Assets = () => {
                     <button
                       type="button"
                       onClick={addInsurance}
-                      className="text-white bg-gradient-to-r from-blue-500 to-green-500 p-2 rounded-md hover:bg-opacity-80"
-                      style={{
-                        background: "linear-gradient(45deg, #00f260, #0575e6)",
-                      }}
+                      className="bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold py-2 px-3 rounded"
+
                     >
                       Save Insurance
                     </button>
@@ -524,64 +516,67 @@ const Assets = () => {
                 </div>
                 {insurance.length > 0 && (
                   <div className="mt-4 overflow-x-auto">
-                    <table className="w-full text-white border border-gray-700">
-                      <thead>
-                        <tr>
-                          <th className="border border-gray-600 bg-gray-800 px-4 py-2">
-                            Insurance Type
-                          </th>
-                          <th className="border border-gray-600 bg-gray-800 px-4 py-2">
-                            Provider
-                          </th>
-                          <th className="border border-gray-600 bg-gray-800 px-4 py-2">
-                            Premium
-                          </th>
-                          <th className="border border-gray-600 bg-gray-800 px-4 py-2">
-                            Coverage
-                          </th>
-                          <th className="border border-gray-600 bg-gray-800 px-4 py-2">
-                            Action
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {insurance.map((item, index) => (
-                          <tr key={index}>
-                            <td className="border border-gray-600 px-4 py-2">
-                              {item.type}
-                            </td>
-                            <td className="border border-gray-600 px-4 py-2">
-                              {item.provider}
-                            </td>
-                            <td className="border border-gray-600 px-4 py-2">
-                              {item.premium}
-                            </td>
-                            <td className="border border-gray-600 px-4 py-2">
-                              {item.coverage}
-                            </td>
-                            <td className="border border-gray-600 px-4 py-2">
-                              <button
-                                onClick={() => handleDelete("insurance", index)}
-                                className="text-red-500"
-                              >
-                                <FaTrash />
-                              </button>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
+  <div className="min-w-full inline-block align-middle mb-5">
+    <table className="min-w-full text-white border border-gray-700">
+      <thead>
+        <tr>
+          <th className="border border-gray-600 bg-gray-800 px-4 py-2 text-center">
+            Insurance Type
+          </th>
+          <th className="border border-gray-600 bg-gray-800 px-4 py-2 text-center">
+            Provider
+          </th>
+          <th className="border border-gray-600 bg-gray-800 px-4 py-2 text-center">
+            Premium
+          </th>
+          <th className="border border-gray-600 bg-gray-800 px-4 py-2 text-center">
+            Coverage
+          </th>
+          <th className="border border-gray-600 bg-gray-800 px-4 py-2 text-center">
+            Action
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        {insurance.map((item, index) => (
+          <tr key={index}>
+            <td className="border border-gray-600 px-4 py-2 text-center">
+              {item.type}
+            </td>
+            <td className="border border-gray-600 px-4 py-2 text-center">
+              {item.provider}
+            </td>
+            <td className="border border-gray-600 px-4 py-2 text-center">
+              {item.premium}
+            </td>
+            <td className="border border-gray-600 px-4 py-2 text-center">
+              {item.coverage}
+            </td>
+            <td className="border border-gray-600 px-4 py-2 text-center">
+              <button
+                onClick={() => handleDelete("insurance", index)}
+                className="text-red-500"
+              >
+                <FaTrash />
+              </button>
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+</div>
+
                 )}
               </div>
             )}
           </div>
 
           {/* Loans Section */}
-          <div>
-            <label className="block text-white">Do you have any loans?</label>
+          <div className="ml-2">
+            <label className="block text-white font-bold text-2xl mb-2">Do you have any loans?</label>
             <div className="flex items-center space-x-4">
-              <label className="text-white">
+              <label className="text-white ml-2">
                 <input
                   type="radio"
                   name="loans"
@@ -609,7 +604,7 @@ const Assets = () => {
                 {showLoanFields && (
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                      <label className="block text-white">Loan Type</label>
+                      <label className="block text-white font-semibold mb-2">Loan Type</label>
                       <input
                         type="text"
                         value={loanType}
@@ -619,7 +614,7 @@ const Assets = () => {
                       />
                     </div>
                     <div>
-                      <label className="block text-white">Loan Amount</label>
+                      <label className="block text-white font-semibold mb-2">Loan Amount</label>
                       <input
                         type="number"
                         value={loanAmount}
@@ -629,7 +624,7 @@ const Assets = () => {
                       />
                     </div>
                     <div>
-                      <label className="block text-white">
+                      <label className="block text-white font-semibold mb-2">
                         Interest Rate (%)
                       </label>
                       <input
@@ -642,7 +637,7 @@ const Assets = () => {
                       />
                     </div>
                     <div>
-                      <label className="block text-white">
+                      <label className="block text-white font-semibold mb-2">
                         Installment Amount
                       </label>
                       <input
@@ -654,7 +649,7 @@ const Assets = () => {
                       />
                     </div>
                     <div>
-                      <label className="block text-white">
+                      <label className="block text-white font-semibold mb-2">
                         Total Installment Paid
                       </label>
                       <input
@@ -666,7 +661,7 @@ const Assets = () => {
                       />
                     </div>
                     <div>
-                      <label className="block text-white">Start Date</label>
+                      <label className="block text-white font-semibold mb-2">Start Date</label>
                       <input
                         type="date"
                         value={startDate}
@@ -675,7 +670,7 @@ const Assets = () => {
                       />
                     </div>
                     <div>
-                      <label className="block text-white">Expiry Date</label>
+                      <label className="block text-white font-semibold mb-2">Expiry Date</label>
                       <input
                         type="date"
                         value={expiryDate}
@@ -690,10 +685,8 @@ const Assets = () => {
                     <button
                       type="button"
                       onClick={() => setShowLoanFields(true)}
-                      className="text-white bg-gradient-to-r from-blue-500 to-green-500 p-2 rounded-md hover:bg-opacity-80"
-                      style={{
-                        background: "linear-gradient(45deg, #00f260, #0575e6)",
-                      }}
+                      className="bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold py-2 px-3 rounded"
+
                     >
                       <FaPlus className="inline mr-2" /> Add Loan
                     </button>
@@ -702,10 +695,8 @@ const Assets = () => {
                     <button
                       type="button"
                       onClick={addLoan}
-                      className="text-white bg-gradient-to-r from-blue-500 to-green-500 p-2 rounded-md hover:bg-opacity-80"
-                      style={{
-                        background: "linear-gradient(45deg, #00f260, #0575e6)",
-                      }}
+                      className="bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold py-2 px-3 rounded"
+
                     >
                       Save Loan
                     </button>
@@ -742,7 +733,7 @@ const Assets = () => {
                           </th>
                         </tr>
                       </thead>
-                      <tbody>
+                      <tbody className="text-center">
                         {loans.map((loan, index) => (
                           <tr key={index}>
                             <td className="border border-gray-600 px-4 py-2">
@@ -788,15 +779,15 @@ const Assets = () => {
             <button
               type="button"
               onClick={() => navigate("/profile")}
-              className="text-white bg-gradient-to-r from-blue-500 to-green-500 p-2 rounded-md hover:bg-opacity-80"
-              style={{ background: "linear-gradient(45deg, #00f260, #0575e6)" }}
+              className="bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold py-2 px-3 rounded"
+
             >
               Back to Profile
             </button>
             <button
               type="submit"
-              className="text-white bg-gradient-to-r from-blue-500 to-green-500 p-2 rounded-md hover:bg-opacity-80"
-              style={{ background: "linear-gradient(45deg, #00f260, #0575e6)" }}
+              className="bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold py-2 px-3 rounded"
+
             >
               Save & Continue
             </button>
@@ -808,3 +799,5 @@ const Assets = () => {
 };
 
 export default Assets;
+
+{/* */}
