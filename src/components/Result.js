@@ -188,7 +188,7 @@ const Result = () => {
 
       return () => clearInterval(intervalId);
     }
-  }, [textIndex]);
+  }, [generatedText,textIndex]);
 
   const handleOpenCalculator = () => setIsCalculatorOpen(!isCalculatorOpen);
   const deadlineYear = financialGoal?.deadline;
