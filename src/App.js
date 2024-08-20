@@ -7,7 +7,7 @@ import FinancialGoals from './components/FinancialGoal';
 import Result from './components/Result';
 import Login from './components/Login';
 import VerifyEmail from './components/VerifyEmail';
-import Prompt from './components/Prompt';
+
 
 const App = () => {
   return (
@@ -21,7 +21,6 @@ const App = () => {
           <Route path="/financial-goals" element={<FinancialGoals />} />
           <Route path="/login" element={<Login />} />
           <Route path="/result" element={<Result/>} />
-          <Route path='/prompt' element={<Prompt/>}></Route>
         </Routes>
       </div>
     </Router>
